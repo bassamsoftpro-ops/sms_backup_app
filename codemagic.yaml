@@ -1,15 +1,11 @@
 workflows:
-  sms-backup:
-    name: SMS Backup Build
-    max_build_duration: 60
-    instance_type: mac_mini_m2
+  android-build:
+    name: Android Build
+    instance_type: linux_x2
     environment:
       flutter: stable
-      java: 17
     scripts:
-      - name: Get Flutter packages
-        script: flutter pub get
-      - name: Build APK
-        script: flutter build apk --release
+      - flutter pub get
+      - flutter build apk --release
     artifacts:
-      - build/**/outputs/flutter-apk/*.apk
+      - build/**/outputs/**/*.apk
