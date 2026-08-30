@@ -11,7 +11,7 @@ dependencies:
     sdk: flutter
   http: ^1.1.0
   permission_handler: ^11.0.0
-  telephony: ^0.2.0
+  sms_advanced: ^1.0.0
   path_provider: ^2.1.0
 
 dev_dependencies:

