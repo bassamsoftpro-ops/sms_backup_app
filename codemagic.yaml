@@ -1,0 +1,10 @@
+workflows:
+  sms-backup:
+    name: SMS Backup Build
+    environment:
+      flutter: stable
+    scripts:
+      - flutter pub get
+      - flutter build apk --release
+    artifacts:
+      - build/**/outputs/**/*.apk
