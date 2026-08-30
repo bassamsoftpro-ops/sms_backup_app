@@ -6,24 +6,28 @@ import 'dart:convert';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SMS Backup',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.purple),
-      home: SMSBackupPage(),
+      theme: ThemeData(primarySwatch: Colors.purple, useMaterial3: true),
+      home: const SMSBackupPage(),
     );
   }
 }
 
 class SMSBackupPage extends StatefulWidget {
+  const SMSBackupPage({super.key});
+
   @override
-  _SMSBackupPageState createState() => _SMSBackupPageState();
+  State<SMSBackupPage> createState() => _SMSBackupPageState();
 }
 
 class _SMSBackupPageState extends State<SMSBackupPage> {
@@ -43,6 +47,7 @@ class _SMSBackupPageState extends State<SMSBackupPage> {
   
   Future<void> requestPermission() async {
     var status = await Permission.sms.request();
+    if (!mounted) return;
     setState(() {
       this.status = status.isGranted ? '✅ Ready' : '❌ Permission denied';
     });
@@ -56,12 +61,14 @@ class _SMSBackupPageState extends State<SMSBackupPage> {
     
     try {
       List<SmsMessage> smsList = await telephony.getInboxSms();
+      if (!mounted) return;
       setState(() {
         messages = smsList;
         isLoading = false;
         status = '✅ ${smsList.length} messages';
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         isLoading = false;
         status = '❌ Error: $e';
@@ -107,11 +114,13 @@ class _SMSBackupPageState extends State<SMSBackupPage> {
       var response = await request.send();
       var result = json.decode(await response.stream.bytesToString());
       
+      if (!mounted) return;
       setState(() {
         isLoading = false;
         status = result['ok'] == true ? '✅ Sent!' : '❌ Failed';
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         isLoading = false;
         status = '❌ Error: $e';
@@ -122,23 +131,23 @@ class _SMSBackupPageState extends State<SMSBackupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('📱 SMS Backup'), centerTitle: true),
+      appBar: AppBar(title: const Text('📱 SMS Backup'), centerTitle: true),
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            Text(status, style: TextStyle(fontSize: 18)),
-            SizedBox(height: 20),
-            if (isLoading) CircularProgressIndicator(),
-            SizedBox(height: 20),
+            Text(status, style: const TextStyle(fontSize: 18)),
+            const SizedBox(height: 20),
+            if (isLoading) const CircularProgressIndicator(),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: isLoading ? null : readSMS,
-              child: Text('Read SMS'),
+              child: const Text('Read SMS'),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             ElevatedButton(
               onPressed: (isLoading || messages.isEmpty) ? null : sendToTelegram,
-              child: Text('Send to Telegram'),
+              child: const Text('Send to Telegram'),
             ),
           ],
         ),
